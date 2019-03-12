@@ -1,3 +1,5 @@
+--PREAMBLE--
+
 create view edge as select distinct Source, Destination from TrainSchedule;
 create view edgelessthanonehour as select distinct Source, Destination from TrainSchedule where Arrival_Time - Departure_Time<=interval '1' hour;
 
@@ -60,7 +62,7 @@ FROM TrainSchedule
 UNION
 SELECT Path.Source, TrainSchedule.Destination, TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time as TimeSpentLast 
 FROM Path, TrainSchedule
-WHERE Path.Destination = TrainSchedule.Source and Path.TimeSpentLast<(TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time))
+WHERE Path.Destination = TrainSchedule.Source and Path.TimeSpentLast<=(TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time))
 SELECT * FROM Path;
 
 create view pathalterdecr as 
@@ -72,7 +74,7 @@ SELECT Path.Source, TrainSchedule.Destination,
 (case when Path.Ifcheck=0 then (TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time) else (Path.TimeSpentLast) end) as TimeSpentLast,
 (case when Path.Ifcheck=1 then (0) else (1) end) as Ifcheck
 FROM Path, TrainSchedule
-WHERE Path.Destination = TrainSchedule.Source and (Path.Ifcheck=1 or (Path.Ifcheck=0 and (Path.TimeSpentLast>(TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time)))) )
+WHERE Path.Destination = TrainSchedule.Source and (Path.Ifcheck=1 or (Path.Ifcheck=0 and (Path.TimeSpentLast>=(TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time)))) )
 SELECT * FROM Path;
 
 
@@ -100,19 +102,25 @@ select Source, Destination, count(*) as co from repeatedpath group by Source, De
 
 --1--
 select distinct Destination from path where upper(Source)='DELHI' order by Destination;
+
 --2--
 select distinct Destination from pathq2hour where upper(Source)='DELHI' order by Destination;
+
 --3--
 select min(TimeSpent) from pathwithtimes where upper(Source)='DELHI' and upper(Destination)='MUMBAI';
+
 --4--
 select distinct train_id from TrainSchedule 
 where upper(Source)<>'DELHI' 
 and 
 Source not in (select distinct Destination from path where upper(Source)='DELHI');
+
 --5--
 select distinct Source, Destination from pathwincrlength order by Source;
+
 --6--
 select distinct Source, Destination from pathalterdecr order by Source;
+
 --7--
 select * from 
 (
@@ -120,14 +128,18 @@ select city1.city as Source, city2.city as Destination from allcities as city1, 
 except
 select distinct Source, Destination from path
 ) as alltab order by Source;
+
 --8--
 select count(*) as no_of_paths from repeatedpath where upper(Source)='DELHI' and upper(Destination)='MUMBAI';
+
 --9--
 select Destination as cities_havingexactly_onepath from repeatedpathgroup where upper(Source)='DELHI' and co=1 order by Destination;
+
 --10--
 select rep1.co*rep2.co as count from repeatedpathgroup as rep1, repeatedpathgroup as rep2 
 where upper(rep1.Source)='DELHI' and upper(rep1.Destination) = 'BHOPAL' 
 and upper(rep2.Source)='BHOPAL' and upper(rep2.Destination)='HYDERABAD';
+
 --CLEANUP--
 drop view repeatedpathgroup cascade;
 drop view repeatedpath cascade;
@@ -137,3 +149,5 @@ drop view pathwincrlength cascade;
 drop view pathwithtimes cascade;
 drop view pathq2hour cascade;
 drop view path cascade;
+drop view edgelessthanonehour cascade;
+drop view edge cascade;
