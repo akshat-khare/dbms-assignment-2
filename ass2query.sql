@@ -57,6 +57,7 @@ and
 )
 SELECT * FROM Path;
 
+create view pathwithtimes as 
 WITH RECURSIVE Path (Source,Destination, Departure_Time_Custom, Arrival_Time_Custom, TimeSpent) AS
 (SELECT Source, Destination,Departure_Time as Departure_Time_Custom,Arrival_Time Arrival_Time_Custom,Arrival_Time-Departure_Time as TimeSpent 
 FROM TrainSchedule
@@ -72,8 +73,27 @@ WHERE TrainSchedule.Destination = Path.Source
 )
 SELECT * FROM Path;
 
+create view pathwincrlength as
+WITH RECURSIVE Path (Source,Destination,TimeSpentLast) AS
+(SELECT Source, Destination, Arrival_Time-Departure_Time as TimeSpentLast
+FROM TrainSchedule
+UNION
+SELECT Path.Source, TrainSchedule.Destination, TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time as TimeSpentLast 
+FROM Path, TrainSchedule
+WHERE Path.Destination = TrainSchedule.Source and Path.TimeSpentLast<(TrainSchedule.Arrival_Time-TrainSchedule.Departure_Time))
+SELECT * FROM Path;
+
 --1--
 select distinct Destination from path where upper(Source)='DELHI' order by Destination;
 --2--
 select distinct Destination from pathq2hour where upper(Source)='DELHI' order by Destination;
 --3--
+select min(TimeSpent) from pathwithtimes where upper(Source)='DELHI';
+--4--
+select distinct train_id from TrainSchedule 
+where upper(Source)<>'DELHI' 
+and 
+Source not in (select distinct Destination from path where upper(Source)='DELHI');
+--5--
+select distinct Source, Destination from pathwincrlength order by Source;
+--6--
