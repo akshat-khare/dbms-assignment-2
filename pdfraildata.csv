@@ -1,0 +1,9 @@
+train_id|source|destination|distance|departure_time|arrival_time
+22435|Kolkata|Bhopal|1200|08:00:00|17:00:00
+21484|Mumbai|Jaipur|500|13:23:44|13:23:45
+21424|Delhi|Mumbai|800|13:23:44|15:05:40
+12456|Bhopal|Mumbai|800|11:00:00|23:00:00
+12453|Banaras|Mumbai|500|11:00:00|21:00:00
+21514|Jaipur|Madras|1500|10:05:00|13:23:45
+21414|Delhi|Kolkata|800|14:05:00|15:05:40
+23432|Bhopal|Hyderabad|670|12:00:00|20:20:00
