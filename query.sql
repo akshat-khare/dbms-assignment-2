@@ -99,6 +99,10 @@ SELECT * FROM Path;
 create view repeatedpathgroup as
 select Source, Destination, count(*) as co from repeatedpath group by Source, Destination;
 
+create view q10ans as 
+select rep1.co*rep2.co as count from repeatedpathgroup as rep1, repeatedpathgroup as rep2 
+where upper(rep1.Source)='DELHI' and upper(rep1.Destination) = 'BHOPAL' 
+and upper(rep2.Source)='BHOPAL' and upper(rep2.Destination)='HYDERABAD';
 
 --1--
 select distinct Destination from path where upper(Source)='DELHI' order by Destination;
@@ -136,11 +140,11 @@ select count(*) as no_of_paths from repeatedpath where upper(Source)='DELHI' and
 select Destination as cities_havingexactly_onepath from repeatedpathgroup where upper(Source)='DELHI' and co=1 order by Destination;
 
 --10--
-select rep1.co*rep2.co as count from repeatedpathgroup as rep1, repeatedpathgroup as rep2 
-where upper(rep1.Source)='DELHI' and upper(rep1.Destination) = 'BHOPAL' 
-and upper(rep2.Source)='BHOPAL' and upper(rep2.Destination)='HYDERABAD';
+select 
+(case when ((select count(*) from q10ans)=0) then (0) else (select count(*) from q10ans) end) as count;
 
 --CLEANUP--
+drop view q10ans cascade;
 drop view repeatedpathgroup cascade;
 drop view repeatedpath cascade;
 drop view allcities cascade;
