@@ -141,7 +141,7 @@ select Destination as cities_havingexactly_onepath from repeatedpathgroup where 
 
 --10--
 select 
-(case when ((select count(*) from q10ans)=0) then (0) else (select count(*) from q10ans) end) as count;
+(case when ((select count(*) from q10ans)=0) then (0) else (select * from q10ans) end) as count;
 
 --CLEANUP--
 drop view q10ans cascade;
