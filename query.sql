@@ -120,10 +120,10 @@ and
 Source not in (select distinct Destination from path where upper(Source)='DELHI');
 
 --5--
-select distinct Source, Destination from pathwincrlength order by Source;
+select distinct Source, Destination from pathwincrlength order by Source, Destination;
 
 --6--
-select distinct Source, Destination from pathalterdecr order by Source;
+select distinct Source, Destination from pathalterdecr order by Source, Destination;
 
 --7--
 select * from 
@@ -131,7 +131,7 @@ select * from
 select city1.city as Source, city2.city as Destination from allcities as city1, allcities as city2 where city1.city<>city2.city
 except
 select distinct Source, Destination from path
-) as alltab order by Source;
+) as alltab order by Source, Destination;
 
 --8--
 select count(*) as no_of_paths from repeatedpath where upper(Source)='DELHI' and upper(Destination)='MUMBAI';
