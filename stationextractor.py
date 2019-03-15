@@ -4,7 +4,7 @@ import datetime
 read_file = open("cities.csv","r")
 count=0
 threshold=10
-numedges=20
+numedges=20000
 numseconds= 86399
 cityarr=[]
 for line in read_file:
@@ -16,8 +16,8 @@ for line in read_file:
 	# print(linearr)
 	city= linearr[0].lower().strip()
 	cityarr.append(city)
-	if(count>threshold):
-		break
+	# if(count>threshold):
+	# 	break
 # print(cityarr)
 # print(len(cityarr))
 
@@ -25,11 +25,22 @@ for line in read_file:
 # for city in cityarr:
 # 	print(city)
 numcities= len(cityarr)
+indexofdelhi =-1
+indexofdelhi =cityarr.index('delhi')
+indexofmumbai = -1
+indexofmumbai = cityarr.index('mumbai')
+# print(indexofdelhi)
+# print(indexofmumbai)
+# exit()
 numedgesadded=0
 edges = np.zeros((numedges,2))
 while(numedgesadded<numedges):
-	start = random.randint(0,numcities-1)
-	end = random.randint(0,numcities-1)
+	if(numedgesadded==0):
+		start= indexofdelhi
+		end = indexofmumbai
+	else:
+		start = random.randint(0,numcities-1)
+		end = random.randint(0,numcities-1)	
 	if(start>=end):
 		continue
 	edges[numedgesadded][0]=start

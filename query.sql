@@ -117,7 +117,7 @@ select min(TimeSpent) from pathwithtimes where upper(Source)='DELHI' and upper(D
 select distinct train_id from TrainSchedule 
 where upper(Source)<>'DELHI' 
 and 
-Source not in (select distinct Destination from path where upper(Source)='DELHI');
+Source not in (select distinct Destination from path where upper(Source)='DELHI') order by train_id;
 
 --5--
 select distinct Source, Destination from pathwincrlength order by Source, Destination;
